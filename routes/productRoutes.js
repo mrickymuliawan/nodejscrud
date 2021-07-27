@@ -11,13 +11,20 @@ router.get('/products', (req, res) => {
 })
 
 router.get('/products/:id', (req, res) => {
-  const data = {
-    name: 'baju',
-    price: 20000
-  }
+  productModel.getSingle(req.params.id, (data, error) => {
+    return res.json({
+      product: data[0] || null,
+      error: error
+    })
+  })
+})
 
-  res.json({
-    product: data
+router.get('/products-count/:categoryId', (req, res) => {
+  productModel.countProduct(req.params.categoryId, (data, error) => {
+    return res.json({
+      product: data[0] || null,
+      error: error
+    })
   })
 })
 
@@ -37,18 +44,24 @@ router.post('/products', (req, res) => {
 router.put('/products/:id', (req, res) => {
   // update query
 
-  res.json({
-    product: req.body,
-    message: `update success ${req.body.name}`
+  productModel.update(req.body, req.params.id, (data, error) => {
+    return res.json({
+      message: error ? 'Failed' : `Update success ${data.affectedRows} data`,
+      error: error
+    })
   })
+
 })
 
 router.delete('/products/:id', (req, res) => {
   // delete query
-
-  res.json({
-    message: `delete success`
+  productModel.deleteSingle(req.params.id, (data, error) => {
+    return res.json({
+      message: error ? 'Failed' : `Delete success ${data.affectedRows} data`,
+      error: error
+    })
   })
+
 })
 
 
